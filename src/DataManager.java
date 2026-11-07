@@ -6,6 +6,8 @@ public class DataManager {
     private File originalFile;
     private File cleanFile;
     private File defaultBinFile;
+    private File userBinFile;
+    private File userTextFile;
 
     // Hàm khởi tạo: xác định đường dẫn tất cả các file dữ liệu trong thư mục data
     public DataManager(File dataFolder) {
@@ -13,6 +15,8 @@ public class DataManager {
         originalFile = new File(dataFolder, "slang.txt");
         cleanFile = new File(dataFolder, "slang_clean.txt");
         defaultBinFile = new File(dataFolder, "slang_default.dat");
+        userBinFile = new File(dataFolder, "slang_user.dat");
+        userTextFile = new File(dataFolder, "slang_user.txt");
     }
 
     // Hàm trả về thư mục data (để nơi khác lưu thêm file như history)
@@ -81,8 +85,41 @@ public class DataManager {
         }
     }
 
-    // Hàm đọc từ điển khi mở chương trình: hiện chỉ có dữ liệu mặc định (các giai đoạn sau sẽ thêm bản của người dùng)
+    // Hàm đọc từ điển khi mở chương trình: ưu tiên bản của người dùng (đã add/edit/delete), không có thì dùng bản mặc định
     public SlangDictionary loadDictionary() throws IOException {
+        if (userBinFile.exists()) {
+            try {
+                return SlangDictionary.loadFromBinary(userBinFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (userTextFile.exists()) {
+                    return SlangDictionary.loadFromText(userTextFile);
+                }
+            }
+        }
+        return loadDefault();
+    }
+
+    // Hàm lưu từ điển của người dùng (file nhị phân + file text), trả về false nếu lưu lỗi
+    public boolean saveUserDictionary(SlangDictionary dictionary) {
+        try {
+            dictionary.saveToBinary(userBinFile);
+            dictionary.saveToText(userTextFile);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Hàm reset: xóa các file của người dùng và đọc lại từ điển mặc định ban đầu
+    public SlangDictionary resetDictionary() throws IOException {
+        if (userBinFile.exists()) {
+            userBinFile.delete();
+        }
+        if (userTextFile.exists()) {
+            userTextFile.delete();
+        }
         return loadDefault();
     }
 }

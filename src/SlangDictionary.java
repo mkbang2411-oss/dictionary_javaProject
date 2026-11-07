@@ -108,6 +108,22 @@ public class SlangDictionary implements Serializable {
         }
     }
 
+    // Hàm xóa slang khỏi index (dùng khi xóa, sửa, ghi đè)
+    private void unindexSlang(String slang, List<String> meanings) {
+        for (int i = 0; i < meanings.size(); i++) {
+            List<String> tokens = tokenize(meanings.get(i));
+            for (int j = 0; j < tokens.size(); j++) {
+                HashSet<String> set = index.get(tokens.get(j));
+                if (set != null) {
+                    set.remove(slang);
+                    if (set.isEmpty()) {
+                        index.remove(tokens.get(j));
+                    }
+                }
+            }
+        }
+    }
+
     // Hàm thêm 1 slang hoàn toàn mới (người gọi phải kiểm tra slang chưa tồn tại)
     public void addNew(String slang, List<String> meanings) {
         words.put(slang, new ArrayList<String>(meanings));
@@ -132,6 +148,23 @@ public class SlangDictionary implements Serializable {
             }
         }
         return count;
+    }
+
+    // Hàm sửa slang: xóa slang cũ rồi thêm slang mới (có thể đổi cả tên và nghĩa)
+    public void edit(String oldSlang, String newSlang, List<String> newMeanings) {
+        delete(oldSlang);
+        addNew(newSlang, newMeanings);
+    }
+
+    // Hàm xóa 1 slang khỏi từ điển và khỏi index
+    public void delete(String slang) {
+        Map.Entry<String, List<String>> entry = findEntry(slang);
+        if (entry == null) {
+            return;
+        }
+        String key = entry.getKey();
+        unindexSlang(key, entry.getValue());
+        words.remove(key);
     }
 
     // Hàm tìm các slang có definition chứa keyword (dùng index để thu hẹp rồi kiểm tra lại), kết quả đã sắp xếp
@@ -166,6 +199,22 @@ public class SlangDictionary implements Serializable {
         }
         Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
         return result;
+    }
+
+    // Hàm thay toàn bộ dữ liệu hiện tại bằng dữ liệu của từ điển khác (dùng cho chức năng reset)
+    public void replaceData(SlangDictionary other) {
+        this.words = other.words;
+        this.index = other.index;
+    }
+
+    // Hàm lưu từ điển ra file text theo cú pháp chuẩn: slang`nghĩa 1| nghĩa 2
+    public void saveToText(File file) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
+            writer.write("Slang`Meaning\n");
+            for (Map.Entry<String, List<String>> entry : words.entrySet()) {
+                writer.write(entry.getKey() + "`" + joinMeanings(entry.getValue()) + "\n");
+            }
+        }
     }
 
     // Hàm đọc từ điển từ file text chuẩn (đã được chuẩn hóa) và xây dựng index

@@ -9,6 +9,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private JPanel cardPanel;
 
     private HistoryPanel historyPanel;
+    private RandomPanel randomPanel;
 
     // Hàm khởi tạo: tạo cửa sổ chính, thanh menu và các màn hình chức năng
     public MainFrame(SlangDictionary dictionary, DataManager dataManager, HistoryManager history) {
@@ -18,6 +19,7 @@ public class MainFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         historyPanel = new HistoryPanel(history);
+        randomPanel = new RandomPanel(dictionary);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -25,6 +27,10 @@ public class MainFrame extends JFrame implements ActionListener {
         cardPanel.add(new SearchSlangPanel(dictionary, history), "search_slang");
         cardPanel.add(new SearchDefinitionPanel(dictionary), "search_definition");
         cardPanel.add(historyPanel, "history");
+        cardPanel.add(new EditPanel(dictionary, dataManager), "edit");
+        cardPanel.add(new DeletePanel(dictionary, dataManager), "delete");
+        cardPanel.add(new ResetPanel(dictionary, dataManager), "reset");
+        cardPanel.add(randomPanel, "random");
 
         setJMenuBar(createMenuBar());
         add(cardPanel);
@@ -56,7 +62,7 @@ public class MainFrame extends JFrame implements ActionListener {
         return item;
     }
 
-    // Hàm tạo thanh menu gồm các nhóm chức năng: File, Search
+    // Hàm tạo thanh menu gồm các nhóm chức năng: File, Search, Manage, Fun
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -70,8 +76,20 @@ public class MainFrame extends JFrame implements ActionListener {
         searchMenu.add(createItem("Search by definition", "search_definition"));
         searchMenu.add(createItem("Search history", "history"));
 
+        JMenu manageMenu = new JMenu("Manage");
+        manageMenu.setFont(UIHelper.BOLD_FONT);
+        manageMenu.add(createItem("Edit a slang word", "edit"));
+        manageMenu.add(createItem("Delete a slang word", "delete"));
+        manageMenu.add(createItem("Reset to original list", "reset"));
+
+        JMenu funMenu = new JMenu("Fun");
+        funMenu.setFont(UIHelper.BOLD_FONT);
+        funMenu.add(createItem("Random slang word (On this day)", "random"));
+
         menuBar.add(fileMenu);
         menuBar.add(searchMenu);
+        menuBar.add(manageMenu);
+        menuBar.add(funMenu);
         return menuBar;
     }
 
@@ -83,6 +101,8 @@ public class MainFrame extends JFrame implements ActionListener {
             System.exit(0);
         } else if (command.equals("history")) {
             historyPanel.refresh();
+        } else if (command.equals("random")) {
+            randomPanel.showRandom();
         }
 
         if (!command.equals("exit")) {
