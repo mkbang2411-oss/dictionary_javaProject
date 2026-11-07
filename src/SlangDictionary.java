@@ -134,6 +134,40 @@ public class SlangDictionary implements Serializable {
         return count;
     }
 
+    // Hàm tìm các slang có definition chứa keyword (dùng index để thu hẹp rồi kiểm tra lại), kết quả đã sắp xếp
+    public List<String> searchByDefinition(String keyword) {
+        String kw = keyword.trim().toLowerCase();
+        List<String> result = new ArrayList<String>();
+        if (kw.isEmpty()) {
+            return result;
+        }
+
+        HashSet<String> candidates = new HashSet<String>();
+        List<String> tokens = tokenize(kw);
+        if (tokens.isEmpty()) {
+            candidates.addAll(words.keySet());
+        } else {
+            String firstToken = tokens.get(0);
+            for (Map.Entry<String, HashSet<String>> e : index.entrySet()) {
+                if (e.getKey().contains(firstToken)) {
+                    candidates.addAll(e.getValue());
+                }
+            }
+        }
+
+        for (String slang : candidates) {
+            List<String> meanings = words.get(slang);
+            for (int i = 0; i < meanings.size(); i++) {
+                if (meanings.get(i).toLowerCase().contains(kw)) {
+                    result.add(slang);
+                    break;
+                }
+            }
+        }
+        Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+        return result;
+    }
+
     // Hàm đọc từ điển từ file text chuẩn (đã được chuẩn hóa) và xây dựng index
     public static SlangDictionary loadFromText(File file) throws IOException {
         SlangDictionary dictionary = new SlangDictionary();
