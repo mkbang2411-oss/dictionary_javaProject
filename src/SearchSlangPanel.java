@@ -5,13 +5,15 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 public class SearchSlangPanel extends JPanel implements ActionListener {
     private SlangDictionary dictionary;
     private HistoryManager history;
     private JTextField slangField;
     private JButton searchButton;
-    private JTextArea resultArea;
+    private DefaultTableModel tableModel;
+    private JTable table;
     private JLabel infoLabel;
 
     // Hàm khởi tạo: dựng giao diện màn hình tìm kiếm theo slang word
@@ -27,21 +29,31 @@ public class SearchSlangPanel extends JPanel implements ActionListener {
         searchButton = UIHelper.createButton("Search");
         searchButton.addActionListener(this);
 
-        JPanel inputRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        JPanel inputRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
         inputRow.add(UIHelper.createLabel("Slang word:"));
         inputRow.add(slangField);
         inputRow.add(searchButton);
 
-        JPanel top = new JPanel(new BorderLayout(0, 12));
-        top.add(UIHelper.createTitle("Search by slang word"), BorderLayout.NORTH);
-        top.add(inputRow, BorderLayout.CENTER);
+        tableModel = new DefaultTableModel(new String[] { "Slang", "Meaning" }, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table = new JTable(tableModel);
+        table.setFont(UIHelper.NORMAL_FONT);
+        table.setRowHeight(24);
+        table.getTableHeader().setFont(UIHelper.BOLD_FONT);
+        table.getColumnModel().getColumn(0).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setPreferredWidth(600);
 
-        resultArea = UIHelper.createReadOnlyArea();
         infoLabel = UIHelper.createLabel(" ");
 
-        add(top, BorderLayout.NORTH);
-        add(new JScrollPane(resultArea), BorderLayout.CENTER);
-        add(infoLabel, BorderLayout.SOUTH);
+        JPanel body = new JPanel(new BorderLayout(10, 10));
+        body.add(inputRow, BorderLayout.NORTH);
+        body.add(new JScrollPane(table), BorderLayout.CENTER);
+        body.add(infoLabel, BorderLayout.SOUTH);
+
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("Search by slang word"), body, 820, true), BorderLayout.CENTER);
     }
 
     // Hàm xử lý khi bấm nút Search hoặc nhấn Enter: tìm slang, hiển thị nghĩa và lưu vào history
@@ -58,18 +70,11 @@ public class SearchSlangPanel extends JPanel implements ActionListener {
 
         history.add(text);
 
-        if (entry == null) {
-            resultArea.setText("Slang word \"" + text + "\" was not found.");
-        } else {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Slang: ").append(entry.getKey()).append("\n\n");
-            List<String> meanings = entry.getValue();
-            for (int i = 0; i < meanings.size(); i++) {
-                sb.append((i + 1)).append(". ").append(meanings.get(i)).append("\n");
-            }
-            resultArea.setText(sb.toString());
-            resultArea.setCaretPosition(0);
+        tableModel.setRowCount(0);
+        if (entry != null) {
+            tableModel.addRow(new Object[] { entry.getKey(), SlangDictionary.joinMeanings(entry.getValue()) });
         }
-        infoLabel.setText("Search time: " + String.format("%.3f", ms) + " ms");
+        int found = entry == null ? 0 : 1;
+        infoLabel.setText(found + " result(s) found. Search time: " + String.format("%.3f", ms) + " ms");
     }
 }

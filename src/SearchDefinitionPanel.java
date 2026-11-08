@@ -26,14 +26,10 @@ public class SearchDefinitionPanel extends JPanel implements ActionListener {
         searchButton = UIHelper.createButton("Search");
         searchButton.addActionListener(this);
 
-        JPanel inputRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        JPanel inputRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
         inputRow.add(UIHelper.createLabel("Keyword in definition:"));
         inputRow.add(keywordField);
         inputRow.add(searchButton);
-
-        JPanel top = new JPanel(new BorderLayout(0, 12));
-        top.add(UIHelper.createTitle("Search by definition"), BorderLayout.NORTH);
-        top.add(inputRow, BorderLayout.CENTER);
 
         tableModel = new DefaultTableModel(new String[] { "Slang", "Meaning" }, 0) {
             public boolean isCellEditable(int row, int column) {
@@ -49,9 +45,12 @@ public class SearchDefinitionPanel extends JPanel implements ActionListener {
 
         infoLabel = UIHelper.createLabel(" ");
 
-        add(top, BorderLayout.NORTH);
-        add(new JScrollPane(table), BorderLayout.CENTER);
-        add(infoLabel, BorderLayout.SOUTH);
+        JPanel body = new JPanel(new BorderLayout(10, 10));
+        body.add(inputRow, BorderLayout.NORTH);
+        body.add(new JScrollPane(table), BorderLayout.CENTER);
+        body.add(infoLabel, BorderLayout.SOUTH);
+
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("Search by definition"), body, 820, true), BorderLayout.CENTER);
     }
 
     // Hàm xử lý khi bấm Search hoặc Enter: tìm các slang có definition chứa keyword và đổ vào bảng

@@ -123,6 +123,9 @@ public class UIHelper {
         if (width > 0) {
             Dimension size = block.getPreferredSize();
             block.setPreferredSize(new Dimension(width, size.height));
+            // Đặt luôn chiều rộng tối thiểu: khi cửa sổ thấp hơn chiều cao mong muốn, GridBagLayout sẽ co cụm về kích thước tối thiểu,
+            // nếu không có dòng này thì cụm bị co hẹp lại chỉ còn bằng chiều rộng của tiêu đề
+            block.setMinimumSize(new Dimension(width, block.getMinimumSize().height));
         }
 
         JPanel page = new JPanel(new GridBagLayout());
