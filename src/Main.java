@@ -6,11 +6,7 @@ public class Main {
 
     // Hàm main: tìm thư mục data, chuẩn bị dữ liệu (chỉ sửa file gốc nếu file chuẩn hóa chưa tồn tại), nạp từ điển và mở giao diện
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        UIHelper.applyTheme();
 
         File dataFolder = DataManager.findDataFolder();
         if (dataFolder == null) {

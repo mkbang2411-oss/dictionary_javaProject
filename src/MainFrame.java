@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 public class MainFrame extends JFrame implements ActionListener {
     private CardLayout cardLayout;
@@ -51,9 +52,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JLabel title = new JLabel("Slang Dictionary", SwingConstants.CENTER);
         title.setFont(UIHelper.BIG_FONT);
+        title.setForeground(UIHelper.PASTEL_GREEN);
 
         JLabel hint = new JLabel("Choose a function from the menu bar above.", SwingConstants.CENTER);
         hint.setFont(new Font("SansSerif", Font.PLAIN, 18));
+        hint.setForeground(UIHelper.GREEN);
 
         panel.add(title, BorderLayout.CENTER);
         panel.add(hint, BorderLayout.SOUTH);
@@ -69,29 +72,35 @@ public class MainFrame extends JFrame implements ActionListener {
         return item;
     }
 
+    // Hàm tạo 1 nhóm menu trên thanh menu, chữ menu canh thẳng hàng với chữ của các mục thả xuống bên dưới
+    private JMenu createMenu(String text) {
+        JMenu menu = new JMenu(text);
+        menu.setFont(UIHelper.BOLD_FONT);
+        menu.setBorder(new EmptyBorder(6, 14, 6, 14));
+        return menu;
+    }
+
     // Hàm tạo thanh menu gồm các nhóm chức năng: File, Search, Manage, Fun
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+        menuBar.setBackground(UIHelper.BAR_BLUE);
+        menuBar.setBorder(new MatteBorder(0, 0, 2, 0, UIHelper.BAR_BLUE_DARK));
 
-        JMenu fileMenu = new JMenu("File");
-        fileMenu.setFont(UIHelper.BOLD_FONT);
+        JMenu fileMenu = createMenu("File");
         fileMenu.add(createItem("Exit", "exit"));
 
-        JMenu searchMenu = new JMenu("Search");
-        searchMenu.setFont(UIHelper.BOLD_FONT);
+        JMenu searchMenu = createMenu("Search");
         searchMenu.add(createItem("Search by slang word", "search_slang"));
         searchMenu.add(createItem("Search by definition", "search_definition"));
         searchMenu.add(createItem("Search history", "history"));
 
-        JMenu manageMenu = new JMenu("Manage");
-        manageMenu.setFont(UIHelper.BOLD_FONT);
+        JMenu manageMenu = createMenu("Manage");
         manageMenu.add(createItem("Add a slang word", "add"));
         manageMenu.add(createItem("Edit a slang word", "edit"));
         manageMenu.add(createItem("Delete a slang word", "delete"));
         manageMenu.add(createItem("Reset to original list", "reset"));
 
-        JMenu funMenu = new JMenu("Fun");
-        funMenu.setFont(UIHelper.BOLD_FONT);
+        JMenu funMenu = createMenu("Fun");
         funMenu.add(createItem("Random slang word (On this day)", "random"));
         funMenu.add(createItem("Quiz: guess the meaning", "quiz_meaning"));
         funMenu.add(createItem("Quiz: guess the slang word", "quiz_slang"));
