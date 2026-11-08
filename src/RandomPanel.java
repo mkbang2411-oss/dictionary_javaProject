@@ -10,7 +10,8 @@ public class RandomPanel extends JPanel implements ActionListener {
     private SlangDictionary dictionary;
     private Random random = new Random();
     private JLabel slangLabel;
-    private JTextArea meaningArea;
+    private JPanel meaningPanel;
+    private static final Font MEANING_FONT = new Font("SansSerif", Font.PLAIN, 20);
     private JButton randomButton;
 
     // Hàm khởi tạo: dựng giao diện màn hình random slang word (On this day slang word)
@@ -23,24 +24,26 @@ public class RandomPanel extends JPanel implements ActionListener {
         slangLabel = new JLabel(" ", SwingConstants.CENTER);
         slangLabel.setFont(UIHelper.BIG_FONT);
 
-        meaningArea = UIHelper.createReadOnlyArea();
-        meaningArea.setFont(new Font("SansSerif", Font.PLAIN, 20));
-        meaningArea.setOpaque(false);
+        meaningPanel = new JPanel();
+        meaningPanel.setLayout(new BoxLayout(meaningPanel, BoxLayout.Y_AXIS));
+        meaningPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        UIHelper.fillCenteredLines(meaningPanel, " ", MEANING_FONT, UIHelper.TEXT_COLOR, 520);
+        slangLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         randomButton = UIHelper.createButton("Random another word");
+        randomButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         randomButton.addActionListener(this);
 
-        JPanel center = new JPanel(new BorderLayout(0, 20));
-        center.setBorder(new EmptyBorder(30, 30, 30, 30));
-        center.add(slangLabel, BorderLayout.NORTH);
-        center.add(meaningArea, BorderLayout.CENTER);
+        // Xếp slang, nghĩa và nút thành 1 khối dọc, canh giữa nhau
+        JPanel body = new JPanel();
+        body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+        body.add(slangLabel);
+        body.add(Box.createVerticalStrut(20));
+        body.add(meaningPanel);
+        body.add(Box.createVerticalStrut(30));
+        body.add(randomButton);
 
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottom.add(randomButton);
-
-        add(UIHelper.createTitle("On this day slang word"), BorderLayout.NORTH);
-        add(center, BorderLayout.CENTER);
-        add(bottom, BorderLayout.SOUTH);
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("On this day slang word"), body, 560, false), BorderLayout.CENTER);
     }
 
     // Hàm chọn ngẫu nhiên 1 slang trong từ điển và hiển thị slang cùng nghĩa của nó
@@ -48,18 +51,19 @@ public class RandomPanel extends JPanel implements ActionListener {
         List<String> slangs = dictionary.getAllSlangs();
         if (slangs.isEmpty()) {
             slangLabel.setText(" ");
-            meaningArea.setText("The dictionary is empty.");
+            UIHelper.fillCenteredLines(meaningPanel, "The dictionary is empty.", MEANING_FONT, UIHelper.TEXT_COLOR, 520);
             return;
         }
         String slang = slangs.get(random.nextInt(slangs.size()));
         List<String> meanings = dictionary.getMeanings(slang);
 
+        // Mỗi nghĩa 1 dòng (tự xuống dòng nếu dài), canh giữa
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < meanings.size(); i++) {
             sb.append((i + 1)).append(". ").append(meanings.get(i)).append("\n");
         }
         slangLabel.setText(slang);
-        meaningArea.setText(sb.toString());
+        UIHelper.fillCenteredLines(meaningPanel, sb.toString(), MEANING_FONT, UIHelper.TEXT_COLOR, 520);
     }
 
     // Hàm xử lý khi bấm nút Random another word

@@ -30,11 +30,7 @@ public class DeletePanel extends JPanel implements ActionListener {
         inputRow.add(slangField);
         inputRow.add(deleteButton);
 
-        JPanel top = new JPanel(new BorderLayout(0, 12));
-        top.add(UIHelper.createTitle("Delete a slang word"), BorderLayout.NORTH);
-        top.add(inputRow, BorderLayout.CENTER);
-
-        add(top, BorderLayout.NORTH);
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("Delete a slang word"), inputRow, 0, false), BorderLayout.CENTER);
     }
 
     // Hàm xử lý khi bấm Delete: tìm slang, hỏi xác nhận, rồi xóa và lưu file

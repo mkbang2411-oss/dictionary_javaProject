@@ -49,11 +49,7 @@ public class AddPanel extends JPanel implements ActionListener {
         c.gridy = 3;
         form.add(addButton, c);
 
-        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        wrapper.add(form);
-
-        add(UIHelper.createTitle("Add a new slang word"), BorderLayout.NORTH);
-        add(wrapper, BorderLayout.CENTER);
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("Add a new slang word"), form, 0, false), BorderLayout.CENTER);
     }
 
     // Hàm lưu từ điển của người dùng, báo lỗi nếu lưu thất bại

@@ -21,7 +21,7 @@ public class MainFrame extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        historyPanel = new HistoryPanel(history);
+        historyPanel = new HistoryPanel(history, dictionary);
         randomPanel = new RandomPanel(dictionary);
         quizMeaningPanel = new QuizPanel(dictionary, QuizPanel.MODE_GUESS_MEANING);
         quizSlangPanel = new QuizPanel(dictionary, QuizPanel.MODE_GUESS_SLANG);
@@ -52,11 +52,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JLabel title = new JLabel("Slang Dictionary", SwingConstants.CENTER);
         title.setFont(UIHelper.BIG_FONT);
-        title.setForeground(UIHelper.PASTEL_GREEN);
+        title.setForeground(UIHelper.TITLE_PINK);
 
         JLabel hint = new JLabel("Choose a function from the menu bar above.", SwingConstants.CENTER);
         hint.setFont(new Font("SansSerif", Font.PLAIN, 18));
-        hint.setForeground(UIHelper.GREEN);
+        hint.setForeground(UIHelper.HINT_GREEN);
 
         panel.add(title, BorderLayout.CENTER);
         panel.add(hint, BorderLayout.SOUTH);
@@ -83,8 +83,8 @@ public class MainFrame extends JFrame implements ActionListener {
     // Hàm tạo thanh menu gồm các nhóm chức năng: File, Search, Manage, Fun
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(UIHelper.BAR_BLUE);
-        menuBar.setBorder(new MatteBorder(0, 0, 2, 0, UIHelper.BAR_BLUE_DARK));
+        menuBar.setBackground(UIHelper.BAR_PINK);
+        menuBar.setBorder(new MatteBorder(0, 0, 2, 0, UIHelper.BAR_PINK_DARK));
 
         JMenu fileMenu = createMenu("File");
         fileMenu.add(createItem("Exit", "exit"));

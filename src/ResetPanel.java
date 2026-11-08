@@ -18,9 +18,9 @@ public class ResetPanel extends JPanel implements ActionListener {
         setLayout(new BorderLayout(10, 10));
         setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        JTextArea note = UIHelper.createReadOnlyArea();
-        note.setOpaque(false);
-        note.setText("Reset will remove all words you added, edited or deleted, and restore the original slang word list.");
+        JLabel note = UIHelper.createLabel(UIHelper.toHtml(
+                "Reset will remove all words you added, edited or deleted, and restore the original slang word list.", 460));
+        note.setVerticalAlignment(SwingConstants.TOP);
 
         resetButton = UIHelper.createButton("Reset to original list");
         resetButton.addActionListener(this);
@@ -31,8 +31,7 @@ public class ResetPanel extends JPanel implements ActionListener {
         buttonRow.add(resetButton);
         center.add(buttonRow, BorderLayout.CENTER);
 
-        add(UIHelper.createTitle("Reset slang word list"), BorderLayout.NORTH);
-        add(center, BorderLayout.CENTER);
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("Reset slang word list"), center, 0, false), BorderLayout.CENTER);
     }
 
     // Hàm xử lý khi bấm nút Reset: hỏi xác nhận, xóa file của người dùng và nạp lại từ điển gốc

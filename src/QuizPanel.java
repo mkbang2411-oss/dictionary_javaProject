@@ -17,6 +17,8 @@ public class QuizPanel extends JPanel implements ActionListener {
     private Random random = new Random();
 
     private JTextArea questionArea;
+    private JPanel highlightPanel;
+    private static final Font HIGHLIGHT_FONT = new Font("SansSerif", Font.BOLD, 28);
     private JButton[] optionButtons = new JButton[4];
     private JLabel resultLabel;
     private JLabel scoreLabel;
@@ -44,8 +46,13 @@ public class QuizPanel extends JPanel implements ActionListener {
 
         questionArea = UIHelper.createReadOnlyArea();
         questionArea.setFont(new Font("SansSerif", Font.BOLD, 20));
-        questionArea.setRows(4);
+        questionArea.setRows(1);
         questionArea.setOpaque(false);
+
+        // Slang (hoặc nghĩa) cần đoán: canh giữa, màu xanh lá để tách khỏi câu hỏi
+        highlightPanel = new JPanel();
+        highlightPanel.setLayout(new BoxLayout(highlightPanel, BoxLayout.Y_AXIS));
+        UIHelper.fillCenteredLines(highlightPanel, " ", HIGHLIGHT_FONT, UIHelper.QUIZ_GREEN, 740);
 
         JPanel optionsPanel = new JPanel(new GridLayout(2, 2, 12, 12));
         for (int i = 0; i < 4; i++) {
@@ -55,9 +62,9 @@ public class QuizPanel extends JPanel implements ActionListener {
         }
         defaultButtonColor = optionButtons[0].getBackground();
 
-        JPanel center = new JPanel(new BorderLayout(0, 15));
-        center.add(questionArea, BorderLayout.NORTH);
-        center.add(optionsPanel, BorderLayout.CENTER);
+        JPanel questionBlock = new JPanel(new BorderLayout(0, 12));
+        questionBlock.add(questionArea, BorderLayout.NORTH);
+        questionBlock.add(highlightPanel, BorderLayout.CENTER);
 
         resultLabel = UIHelper.createLabel(" ");
         resultLabel.setFont(UIHelper.BOLD_FONT);
@@ -72,9 +79,18 @@ public class QuizPanel extends JPanel implements ActionListener {
         right.add(nextButton);
         bottom.add(right, BorderLayout.EAST);
 
-        add(UIHelper.createTitle(title), BorderLayout.NORTH);
-        add(center, BorderLayout.CENTER);
-        add(bottom, BorderLayout.SOUTH);
+        JPanel body = new JPanel(new BorderLayout(0, 15));
+        body.add(questionBlock, BorderLayout.NORTH);
+        body.add(optionsPanel, BorderLayout.CENTER);
+        body.add(bottom, BorderLayout.SOUTH);
+
+        add(UIHelper.createCenteredPage(UIHelper.createTitle(title), body, 800, true), BorderLayout.CENTER);
+    }
+
+    // Hàm hiển thị câu hỏi: dòng câu hỏi canh trái, phần slang / nghĩa cần đoán canh giữa bên dưới
+    private void setQuestion(String prompt, String highlight) {
+        questionArea.setText(prompt);
+        UIHelper.fillCenteredLines(highlightPanel, highlight, HIGHLIGHT_FONT, UIHelper.QUIZ_GREEN, 740);
     }
 
     // Hàm bắt đầu lượt chơi mới: đặt điểm về 0 và ra câu hỏi đầu tiên
@@ -117,7 +133,7 @@ public class QuizPanel extends JPanel implements ActionListener {
         }
 
         if (!ok) {
-            questionArea.setText("Not enough different slang words to make a question (need at least 4).");
+            setQuestion("Not enough different slang words to make a question (need at least 4).", " ");
             for (int i = 0; i < 4; i++) {
                 optionButtons[i].setText(" ");
             }
@@ -156,7 +172,7 @@ public class QuizPanel extends JPanel implements ActionListener {
             options[i] = list.get(i);
         }
         correctIndex = list.indexOf(correctText);
-        questionArea.setText("What is the meaning of this slang word?\n\n" + answerSlang);
+        setQuestion("What is the meaning of this slang word?", answerSlang);
         return true;
     }
 
@@ -189,7 +205,7 @@ public class QuizPanel extends JPanel implements ActionListener {
             options[i] = list.get(i);
         }
         correctIndex = list.indexOf(answerSlang);
-        questionArea.setText("Which slang word has this meaning?\n\n" + shownMeaning);
+        setQuestion("Which slang word has this meaning?", shownMeaning);
         return true;
     }
 

@@ -66,11 +66,7 @@ public class EditPanel extends JPanel implements ActionListener {
         c.gridy = 4;
         form.add(saveButton, c);
 
-        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        wrapper.add(form);
-
-        add(UIHelper.createTitle("Edit a slang word"), BorderLayout.NORTH);
-        add(wrapper, BorderLayout.CENTER);
+        add(UIHelper.createCenteredPage(UIHelper.createTitle("Edit a slang word"), form, 0, false), BorderLayout.CENTER);
     }
 
     // Hàm bật/tắt các ô chỉnh sửa (chỉ bật sau khi đã Load 1 slang)
