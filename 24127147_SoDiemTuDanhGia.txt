@@ -2,9 +2,9 @@
 ĐỒ ÁN #1 - SLANG WORD (CSC13002 - Lập trình ứng dụng Java)
 MSSV: 24127147
 
-LINK VIDEO YOUTUBE: <dán link video vào đây>
+LINK VIDEO YOUTUBE: ...
 
-BẢNG TỰ ĐÁNH GIÁ (thang 100, mỗi chức năng 10 điểm)
+BẢNG TỰ ĐÁNH GIÁ
  1. Tìm kiếm theo slang word ............................ 10/10
  2. Tìm kiếm theo definition ............................. 10/10
  3. Hiển thị history (danh sách slang đã tìm) ............ 10/10
@@ -24,10 +24,10 @@ CẤU TRÚC DỮ LIỆU SỬ DỤNG
 - Toàn bộ cấu trúc (đã index) được lưu ra file nhị phân (serialization) để lần chạy sau nạp lên luôn, không cần index lại.
 - Test 100.000 slang word: tìm theo slang < 1 ms, tìm theo definition vài ms (trường hợp xấu nhất khoảng 0.2 giây).
 
-CÁC FILE DỮ LIỆU (thư mục data)
-- slang.txt          : file gốc của đề (giữ nguyên, không sửa).
-- slang_clean.txt    : file đã được chuẩn hóa cú pháp (tạo 1 lần từ slang.txt bởi hàm SlangFileFixer.fixFile).
-- slang_default.dat  : cấu trúc dữ liệu đã index từ slang_clean.txt (dữ liệu mặc định ban đầu).
+CÁC FILE DỮ LIỆU 
+- slang.txt          : file gốc của đề.
+- slang_clean.txt    : file đã được chuẩn hóa cú pháp.
+- slang_default.dat  : cấu trúc dữ liệu đã index từ slang_clean.txt.
 - slang_user.dat / slang_user.txt : tạo khi người dùng add/edit/delete; bấm Reset thì bị xóa và nạp lại dữ liệu mặc định.
 - history.txt        : lịch sử tìm kiếm (tạo khi có tìm kiếm).
 
