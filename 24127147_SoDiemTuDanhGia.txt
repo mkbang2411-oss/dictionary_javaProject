@@ -1,0 +1,36 @@
+24127147
+ĐỒ ÁN #1 - SLANG WORD (CSC13002 - Lập trình ứng dụng Java)
+MSSV: 24127147
+
+LINK VIDEO YOUTUBE: <dán link video vào đây>
+
+BẢNG TỰ ĐÁNH GIÁ (thang 100, mỗi chức năng 10 điểm)
+ 1. Tìm kiếm theo slang word ............................ 10/10
+ 2. Tìm kiếm theo definition ............................. 10/10
+ 3. Hiển thị history (danh sách slang đã tìm) ............ 10/10
+ 4. Add slang word (trùng thì hỏi overwrite/duplicate) ... 10/10
+ 5. Edit slang word ...................................... 10/10
+ 6. Delete slang word (có confirm) ....................... 10/10
+ 7. Reset danh sách slang word gốc ....................... 10/10
+ 8. Random 1 slang word (On this day slang word) ......... 10/10
+ 9. Đố vui: cho slang, chọn 1 trong 4 definition ......... 10/10
+10. Đố vui: cho definition, chọn 1 trong 4 slang ......... 10/10
+-------------------------------------------------------------
+TỔNG ĐIỂM TỰ ĐÁNH GIÁ: 100/100
+
+CẤU TRÚC DỮ LIỆU SỬ DỤNG
+- TreeMap<String, List<String>> (không phân biệt hoa/thường): slang -> danh sách nghĩa. Tìm theo slang O(log n).
+- HashMap<String, HashSet<String>>: index đảo (từ trong definition -> tập slang), dùng cho tìm theo definition.
+- Toàn bộ cấu trúc (đã index) được lưu ra file nhị phân (serialization) để lần chạy sau nạp lên luôn, không cần index lại.
+- Test 100.000 slang word: tìm theo slang < 1 ms, tìm theo definition vài ms (trường hợp xấu nhất khoảng 0.2 giây).
+
+CÁC FILE DỮ LIỆU (thư mục data)
+- slang.txt          : file gốc của đề (giữ nguyên, không sửa).
+- slang_clean.txt    : file đã được chuẩn hóa cú pháp (tạo 1 lần từ slang.txt bởi hàm SlangFileFixer.fixFile).
+- slang_default.dat  : cấu trúc dữ liệu đã index từ slang_clean.txt (dữ liệu mặc định ban đầu).
+- slang_user.dat / slang_user.txt : tạo khi người dùng add/edit/delete; bấm Reset thì bị xóa và nạp lại dữ liệu mặc định.
+- history.txt        : lịch sử tìm kiếm (tạo khi có tìm kiếm).
+
+CÁCH CHẠY
+- Giữ nguyên thư mục data nằm cạnh file SlangDictionary.jar, chạy:  java -jar SlangDictionary.jar
+- Mã nguồn nằm trong thư mục src (biên dịch: javac -encoding UTF-8 *.java, hàm main nằm ở Main.java).

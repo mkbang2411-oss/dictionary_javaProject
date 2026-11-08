@@ -130,6 +130,12 @@ public class SlangDictionary implements Serializable {
         indexSlang(slang, meanings);
     }
 
+    // Hàm ghi đè: xóa slang cũ cùng tên rồi thêm lại với nghĩa mới
+    public void overwrite(String slang, List<String> meanings) {
+        delete(slang);
+        addNew(slang, meanings);
+    }
+
     // Hàm duplicate: thêm nghĩa mới vào slang đã có, trả về số nghĩa thực sự được thêm
     public int addMeanings(String slang, List<String> newMeanings) {
         Map.Entry<String, List<String>> entry = findEntry(slang);

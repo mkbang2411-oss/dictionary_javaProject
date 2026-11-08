@@ -10,6 +10,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
     private HistoryPanel historyPanel;
     private RandomPanel randomPanel;
+    private QuizPanel quizMeaningPanel;
+    private QuizPanel quizSlangPanel;
 
     // Hàm khởi tạo: tạo cửa sổ chính, thanh menu và các màn hình chức năng
     public MainFrame(SlangDictionary dictionary, DataManager dataManager, HistoryManager history) {
@@ -20,6 +22,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
         historyPanel = new HistoryPanel(history);
         randomPanel = new RandomPanel(dictionary);
+        quizMeaningPanel = new QuizPanel(dictionary, QuizPanel.MODE_GUESS_MEANING);
+        quizSlangPanel = new QuizPanel(dictionary, QuizPanel.MODE_GUESS_SLANG);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -27,10 +31,13 @@ public class MainFrame extends JFrame implements ActionListener {
         cardPanel.add(new SearchSlangPanel(dictionary, history), "search_slang");
         cardPanel.add(new SearchDefinitionPanel(dictionary), "search_definition");
         cardPanel.add(historyPanel, "history");
+        cardPanel.add(new AddPanel(dictionary, dataManager), "add");
         cardPanel.add(new EditPanel(dictionary, dataManager), "edit");
         cardPanel.add(new DeletePanel(dictionary, dataManager), "delete");
         cardPanel.add(new ResetPanel(dictionary, dataManager), "reset");
         cardPanel.add(randomPanel, "random");
+        cardPanel.add(quizMeaningPanel, "quiz_meaning");
+        cardPanel.add(quizSlangPanel, "quiz_slang");
 
         setJMenuBar(createMenuBar());
         add(cardPanel);
@@ -78,6 +85,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JMenu manageMenu = new JMenu("Manage");
         manageMenu.setFont(UIHelper.BOLD_FONT);
+        manageMenu.add(createItem("Add a slang word", "add"));
         manageMenu.add(createItem("Edit a slang word", "edit"));
         manageMenu.add(createItem("Delete a slang word", "delete"));
         manageMenu.add(createItem("Reset to original list", "reset"));
@@ -85,6 +93,8 @@ public class MainFrame extends JFrame implements ActionListener {
         JMenu funMenu = new JMenu("Fun");
         funMenu.setFont(UIHelper.BOLD_FONT);
         funMenu.add(createItem("Random slang word (On this day)", "random"));
+        funMenu.add(createItem("Quiz: guess the meaning", "quiz_meaning"));
+        funMenu.add(createItem("Quiz: guess the slang word", "quiz_slang"));
 
         menuBar.add(fileMenu);
         menuBar.add(searchMenu);
@@ -103,6 +113,10 @@ public class MainFrame extends JFrame implements ActionListener {
             historyPanel.refresh();
         } else if (command.equals("random")) {
             randomPanel.showRandom();
+        } else if (command.equals("quiz_meaning")) {
+            quizMeaningPanel.startQuiz();
+        } else if (command.equals("quiz_slang")) {
+            quizSlangPanel.startQuiz();
         }
 
         if (!command.equals("exit")) {
